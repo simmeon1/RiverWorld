@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package rivercrossingpuzzle;
+
+import cm3038.search.*;
+import cm3038.search.informed.*;
+
+/**
+ *
+ * @author Simeon
+ */
+public class RiverCrossingPuzzle {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Person[] listOfPeople = {new Person(85, true),new Person(86, false)};
+        Person[] emptyListOfPeople = {null};
+        RiverWorld riverWorld = new RiverWorld(listOfPeople);
+        Boat boat = new Boat(2, 190, riverWorld);
+        RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
+        RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
+        //System.out.println(currentState.toString());
+        //System.out.println(goalState.toString());
+        currentState.successor();
+        //System.out.println(currentState.toString());
+    }
+
+}
