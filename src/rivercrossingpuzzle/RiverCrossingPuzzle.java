@@ -7,6 +7,7 @@ package rivercrossingpuzzle;
 
 import cm3038.search.*;
 import cm3038.search.informed.*;
+import java.util.*;
 
 /**
  *
@@ -18,10 +19,12 @@ public class RiverCrossingPuzzle {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Person[] listOfPeople = {new Person(85, true),new Person(86, false)};
-        Person[] emptyListOfPeople = {null};
-        RiverWorld riverWorld = new RiverWorld(listOfPeople);
-        Boat boat = new Boat(2, 190, riverWorld);
+        ArrayList<Person> listOfPeople = new ArrayList<Person>();
+        listOfPeople.add(new Person(85, true));
+        listOfPeople.add(new Person(86, false));
+        ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
+        RiverWorld riverWorld = new RiverWorld();
+        Boat boat = new Boat(1, 190, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());

@@ -5,34 +5,30 @@
  */
 package rivercrossingpuzzle;
 
+import java.util.*;
+
 /**
  *
  * @author Simeon
  */
 public class RiverWorld {
 
-    public Person[] southBank;
-    public Person[] northBank;
+    public ArrayList<Person> southBank;
+    public ArrayList<Person> northBank;
 
-    public RiverWorld(Person[] listOfPeople) {
-        northBank = new Person[listOfPeople.length];
-        southBank = new Person[listOfPeople.length];        
+    public RiverWorld() {
+        northBank = new ArrayList<Person>();
+        southBank = new ArrayList<Person>();
     }
 
     public String toString() {
         String peopleOnNorthBank = "";
-        String peopleOnSouthBank = "";        
-        for (int i = 0; i < northBank.length; i++) {
-            if (northBank[i] != null) {
-                peopleOnNorthBank += northBank[i].weight + " , ";
-            } else {
-                peopleOnNorthBank += "empty, ";
-            }
-            if (southBank[i] != null) {
-                peopleOnSouthBank += southBank[i].weight+ " , ";
-            } else {
-                peopleOnSouthBank += "empty, ";
-            }
+        String peopleOnSouthBank = "";
+        for (int i = 0; i < northBank.size(); i++) {
+            peopleOnNorthBank += northBank.get(i).weight + "(" + (northBank.get(i).canSail ? "canSail" : "noSail") + "), ";
+        }
+        for (int i = 0; i < southBank.size(); i++) {
+            peopleOnSouthBank += southBank.get(i).weight + "(" + (southBank.get(i).canSail ? "canSail" : "noSail") + "), ";
         }
         String output = "-----------NORTH BANK-----------\n";
         output += peopleOnNorthBank;

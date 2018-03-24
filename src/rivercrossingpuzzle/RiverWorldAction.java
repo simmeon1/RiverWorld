@@ -6,6 +6,7 @@
 package rivercrossingpuzzle;
 
 import cm3038.search.Action;
+import java.util.*;
 
 /**
  *
@@ -13,12 +14,18 @@ import cm3038.search.Action;
  */
 public class RiverWorldAction extends Action{
     
-    Person[] northBank;
-    Person[] southBank;
+    ArrayList<Person> northBank;
+    ArrayList<Person> southBank;
     Boat boat;
     Location boatLocation;
     RiverWorldState riverWorldState;
     
-    public RiverWorldAction ()
+    public RiverWorldAction (RiverWorldState riverWorldState, Boat boat) {
+        
+    }   
     
+    @Override
+    public String toString() {
+        return "";
+    }    
 }

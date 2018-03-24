@@ -17,7 +17,7 @@ public class Boat {
 
     public int seats;
     public double maxLoad;
-    public Person[] peopleOnBoat;
+    public ArrayList<Person> peopleOnBoat;
     public RiverWorld world;
     //public Location location;
 
@@ -25,31 +25,17 @@ public class Boat {
         this.seats = seats;
         this.maxLoad = maxLoad;
         this.world = world;
-        this.peopleOnBoat = new Person[seats];
+        this.peopleOnBoat = new ArrayList<Person>();
         //this.location = Location.SOUTH;
     }
     
-    public Boat loadPersonOnBoat (Person person) {
-        for (int i = 0; i < peopleOnBoat.length; i++) {
-            if (peopleOnBoat[i] == null) {
-                peopleOnBoat[i] = person;
-                break;
-            }
-        }
-        return this;
+    public Person loadPersonOnBoat (Person person) {
+        peopleOnBoat.add(person);
+        return person;
     }
     
     public int getCountOfPeopleOnBoat () {
-        int result = 0;
-        for (int i = 0; i < peopleOnBoat.length; i++) {
-            if (peopleOnBoat[i] != null) {
-                result++;
-            }
-        }
-        return result;
+        return peopleOnBoat.size();
     }
-    
-    public void getAllUniquePoepleOnBoatCombinations() {
-
-    }    
+     
 }
