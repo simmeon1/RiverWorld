@@ -7,6 +7,7 @@ package rivercrossingpuzzle;
 
 import cm3038.search.*;
 import com.sun.xml.internal.ws.util.StringUtils;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -56,7 +57,11 @@ public class RiverWorldState implements State {
 
         for (int i = 0; i < possibleCombinationsOnBoat.size(); i++) {
             String currentCombination = possibleCombinationsOnBoat.get(i);
-            if (currentCombination == null || countPeopleInCombination(currentCombination) > boat.seats) {
+            if (currentCombination == null) {
+                continue;
+            }
+            if (countPeopleInCombination(currentCombination) > boat.seats) {
+                System.out.println("Combination " + currentCombination + " is not good due to max seats.");
                 continue;
             }
             double totalWeightOfCombination = 0;
@@ -64,33 +69,40 @@ public class RiverWorldState implements State {
             String selectedIndex = "";
             for (int j = 0; j < currentCombination.length(); j++) {
                 if (currentCombination.charAt(j) != '|') {
-                    if (currentCombination.charAt(j) == '(' || currentCombination.charAt(j) == ')') {
+                    if (currentCombination.charAt(j) == '(') {
                         continue;
+                    } else if (currentCombination.charAt(j) != ')') {
+                        selectedIndex += currentCombination.charAt(j);
                     }
-                    selectedIndex += currentCombination.charAt(j);
-                    continue;
+                    if (currentCombination.charAt(j) == ')') {
+                        Person selectedPerson = peopleOnBoatBank.get(Integer.parseInt(selectedIndex));
+                        if (selectedPerson.canSail) {
+                            canAnyoneSail = true;
+                        }
+                        totalWeightOfCombination += selectedPerson.weight;
+                        selectedIndex = "";
+                    }
                 }
-                Person selectedPerson = peopleOnBoatBank.get(Integer.parseInt(selectedIndex));
-                if (selectedPerson.canSail) {
-                    canAnyoneSail = true;
-                }
-                totalWeightOfCombination += selectedPerson.weight;
             }
             if (canAnyoneSail && totalWeightOfCombination <= boat.maxLoad) {
                 validCombinationsOnBoat.add(currentCombination);
                 System.out.println("Combination " + currentCombination + " is good.");
-            } else {
-                System.out.println("Combination " + currentCombination + " is not good.");
+            } else if (totalWeightOfCombination > boat.maxLoad) {
+                System.out.println("Combination " + currentCombination + " is not good due to total weight being "
+                        + totalWeightOfCombination + "/" + boat.maxLoad + ".");
+            } else if (!canAnyoneSail) {
+                System.out.println("Combination " + currentCombination + " is not good due to no sailors.");
             }
             selectedIndex = "";
         }
+        System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good.");
 
         return result;
     }
 
     public int countPeopleInCombination(String combination) {
         String str = combination;
-        String findStr = "|";
+        String findStr = "(";
         int lastIndex = 0;
         int count = 0;
 
@@ -112,15 +124,17 @@ public class RiverWorldState implements State {
         for (int i = 1; i <= count - 1; i++) {
             String currentCombination = "";
             String str = Integer.toString(i, 2);
-            str = String.format("%0" + boatBank.size() + "d", Integer.parseInt(str));
+            BigInteger strInt = new BigInteger(str);
+            str = String.format("%0" + boatBank.size() + "d", strInt);
             for (int j = 0; j < str.length(); j++) {
                 if (str.charAt(j) == '1') {
-                    System.out.print(boatBank.get(j));
-                    currentCombination += "(" + j + ")" + "|";
+                    //System.out.print(boatBank.get(j));
+                    currentCombination += "(" + j + ")";
                 }
             }
+            currentCombination += "|";
             possibleCombinations.add(currentCombination);
-            System.out.println();
+            //System.out.println();
         }
         return possibleCombinations;
     }

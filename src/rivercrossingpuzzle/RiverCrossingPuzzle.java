@@ -20,11 +20,19 @@ public class RiverCrossingPuzzle {
      */
     public static void main(String[] args) {
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
-        listOfPeople.add(new Person(85, true));
-        listOfPeople.add(new Person(86, false));
+        listOfPeople.add(new Person(50, true));
+        listOfPeople.add(new Person(60, false));
+        listOfPeople.add(new Person(70, true));
+        listOfPeople.add(new Person(80, false));
+        listOfPeople.add(new Person(90, true));
+        listOfPeople.add(new Person(55, true));
+        listOfPeople.add(new Person(65, false));
+        listOfPeople.add(new Person(75, true));
+        listOfPeople.add(new Person(85, false));
+        listOfPeople.add(new Person(95, true));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(1, 190, riverWorld);
+        Boat boat = new Boat(3, 220, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
