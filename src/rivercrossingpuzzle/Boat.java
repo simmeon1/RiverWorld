@@ -18,14 +18,16 @@ public class Boat {
     public int seats;
     public double maxLoad;
     public ArrayList<Person> peopleOnBoat;
+    public Location location;
     public RiverWorld world;
     //public Location location;
 
-    public Boat(int seats, double maxLoad, RiverWorld world) {
+    public Boat(int seats, double maxLoad, RiverWorld world, Location location) {
         this.seats = seats;
         this.maxLoad = maxLoad;
         this.world = world;
         this.peopleOnBoat = new ArrayList<Person>();
+        this.location = location;
         //this.location = Location.SOUTH;
     }
     

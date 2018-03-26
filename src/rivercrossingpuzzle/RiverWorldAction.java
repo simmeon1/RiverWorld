@@ -14,18 +14,20 @@ import java.util.*;
  */
 public class RiverWorldAction extends Action{
     
-    ArrayList<Person> northBank;
-    ArrayList<Person> southBank;
+    ArrayList<String> validCombination;
     Boat boat;
-    Location boatLocation;
     RiverWorldState riverWorldState;
     
-    public RiverWorldAction (RiverWorldState riverWorldState, Boat boat) {
-        
-    }   
+    public RiverWorldAction (RiverWorldState riverWorldState, Boat boat, ArrayList<String> validCombination) {
+        this.validCombination = validCombination;
+        this.boat = boat;
+        this.riverWorldState = riverWorldState;
+    }
     
     @Override
     public String toString() {
-        return "";
+        String result = riverWorldState.toString();
+        
+        return result;
     }    
 }

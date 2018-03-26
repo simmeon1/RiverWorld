@@ -20,14 +20,12 @@ public class RiverWorldState implements State {
     public RiverWorld riverWorld;
     public ArrayList<Person> northBank;
     public ArrayList<Person> southBank;
-    public Location boatLocation;
 
-    public RiverWorldState(RiverWorld riverWorld, Boat boat, Location boatLocation, ArrayList<Person> northBank, ArrayList<Person> southBank) {
+    public RiverWorldState(RiverWorld riverWorld, Boat boat, ArrayList<Person> northBank, ArrayList<Person> southBank) {
         this.riverWorld = riverWorld;
         this.boat = boat;
         this.northBank = northBank;
         this.southBank = southBank;
-        this.boatLocation = boatLocation;
     }
 
     /*public RiverWorld generatePeopleOnBank(ArrayList<Person> listOfPeople, Location bank) {
@@ -44,45 +42,35 @@ public class RiverWorldState implements State {
         List<ActionStatePair> result = new ArrayList<ActionStatePair>();
         for (int i = 0; i < boat.peopleOnBoat.size(); i++) {
             if (boat.peopleOnBoat.get(i) != null) {
-                if (boatLocation == Location.SOUTH) {
+                if (boat.location == Location.SOUTH) {
                     southBank.add(boat.peopleOnBoat.remove(i));
                 } else {
                     northBank.add(boat.peopleOnBoat.remove(i));
                 }
             }
         }
-        ArrayList<Person> peopleOnBoatBank = boatLocation == Location.SOUTH ? southBank : northBank;
-        ArrayList<String> possibleCombinationsOnBoat = getPeopleCombinationsOnBoat(peopleOnBoatBank);
-        ArrayList<String> validCombinationsOnBoat = new ArrayList<>();
+        ArrayList<Person> peopleOnBoatBank = boat.location == Location.SOUTH ? southBank : northBank;
+        ArrayList<ArrayList<Integer>> possibleCombinationsOnBoat = getPeopleCombinationsOnBoat(peopleOnBoatBank);
+        ArrayList<ArrayList<Integer>> validCombinationsOnBoat = new ArrayList<>();
 
         for (int i = 0; i < possibleCombinationsOnBoat.size(); i++) {
-            String currentCombination = possibleCombinationsOnBoat.get(i);
+            ArrayList<Integer> currentCombination = possibleCombinationsOnBoat.get(i);
             if (currentCombination == null) {
                 continue;
             }
-            if (countPeopleInCombination(currentCombination) > boat.seats) {
-                System.out.println("Combination " + currentCombination + " is not good due to max seats.");
+            if (currentCombination.size() > boat.seats) {
+                System.out.println("Combination " + currentCombination + " is not good due to needed seats being "
+                        + currentCombination.size() + "/" + boat.seats + ".");
                 continue;
             }
             double totalWeightOfCombination = 0;
             boolean canAnyoneSail = false;
-            String selectedIndex = "";
-            for (int j = 0; j < currentCombination.length(); j++) {
-                if (currentCombination.charAt(j) != '|') {
-                    if (currentCombination.charAt(j) == '(') {
-                        continue;
-                    } else if (currentCombination.charAt(j) != ')') {
-                        selectedIndex += currentCombination.charAt(j);
-                    }
-                    if (currentCombination.charAt(j) == ')') {
-                        Person selectedPerson = peopleOnBoatBank.get(Integer.parseInt(selectedIndex));
-                        if (selectedPerson.canSail) {
-                            canAnyoneSail = true;
-                        }
-                        totalWeightOfCombination += selectedPerson.weight;
-                        selectedIndex = "";
-                    }
+            for (int j = 0; j < currentCombination.size(); j++) {
+                Person selectedPerson = peopleOnBoatBank.get(currentCombination.get(j));
+                if (selectedPerson.canSail) {
+                    canAnyoneSail = true;
                 }
+                totalWeightOfCombination += selectedPerson.weight;
             }
             if (canAnyoneSail && totalWeightOfCombination <= boat.maxLoad) {
                 validCombinationsOnBoat.add(currentCombination);
@@ -93,7 +81,6 @@ public class RiverWorldState implements State {
             } else if (!canAnyoneSail) {
                 System.out.println("Combination " + currentCombination + " is not good due to no sailors.");
             }
-            selectedIndex = "";
         }
         System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good.");
 
@@ -118,21 +105,20 @@ public class RiverWorldState implements State {
         return count;
     }
 
-    public ArrayList<String> getPeopleCombinationsOnBoat(ArrayList<Person> boatBank) {
+    public ArrayList<ArrayList<Integer>> getPeopleCombinationsOnBoat(ArrayList<Person> boatBank) {
         int count = (int) Math.pow(2, boatBank.size());
-        ArrayList<String> possibleCombinations = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> possibleCombinations = new ArrayList<>();
         for (int i = 1; i <= count - 1; i++) {
-            String currentCombination = "";
+            ArrayList<Integer> currentCombination = new ArrayList<>();
             String str = Integer.toString(i, 2);
             BigInteger strInt = new BigInteger(str);
             str = String.format("%0" + boatBank.size() + "d", strInt);
             for (int j = 0; j < str.length(); j++) {
                 if (str.charAt(j) == '1') {
                     //System.out.print(boatBank.get(j));
-                    currentCombination += "(" + j + ")";
+                    currentCombination.add(j);
                 }
             }
-            currentCombination += "|";
             possibleCombinations.add(currentCombination);
             //System.out.println();
         }
@@ -176,9 +162,9 @@ public class RiverWorldState implements State {
         }
         String output = "-----------NORTH BANK-----------\n";
         output += peopleOnNorthBank;
-        output += boatLocation == Location.NORTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        output += boat.location == Location.NORTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
         output += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        output += boatLocation == Location.SOUTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        output += boat.location == Location.SOUTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         output += peopleOnSouthBank;
         output += "\n-----------SOUTH BANK-----------\n";
         output += "\n------------------------------------------------------------------------\n";
