@@ -23,8 +23,8 @@ public class RiverCrossingPuzzle {
         listOfPeople.add(new Person("Adam", 100, true));
         listOfPeople.add(new Person("Betty", 90, true));
         listOfPeople.add(new Person("Claire", 50, true));
-        //listOfPeople.add(new Person("Dave", 30, false));
-        //listOfPeople.add(new Person(90, true));
+        listOfPeople.add(new Person("Dave", 30, false));
+        //listOfPeople.add(new Person("Bcam", 100, true));
         //listOfPeople.add(new Person(55, true));
         //listOfPeople.add(new Person(65, false));
         //listOfPeople.add(new Person(75, true));
@@ -32,7 +32,7 @@ public class RiverCrossingPuzzle {
         //listOfPeople.add(new Person(95, true));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(2, 400, riverWorld);
+        Boat boat = new Boat(2, 140, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
@@ -63,5 +63,7 @@ public class RiverCrossingPuzzle {
             System.out.println("Nodes visited: " + problem.nodeVisited);
             System.out.println("Cost: " + path.cost + "\n");
         }
+        //System.out.println(listOfPeople.get(0).hashCode());
+        //System.out.println(listOfPeople.get(3).hashCode());
     } //end method
 }

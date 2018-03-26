@@ -41,4 +41,15 @@ public class Person implements Comparable<Person> {
         }
         return name.compareTo(o.name);
     }
+    
+    @Override
+    public int hashCode() {
+        int result = 0;
+        for (int i = 0; i < name.length(); i++) {
+                result += name.charAt(i) * (i + 100);
+            }
+            result += weight * 100;
+            result += canSail ? 5000 : 1000;
+        return result;
+    }
 }
