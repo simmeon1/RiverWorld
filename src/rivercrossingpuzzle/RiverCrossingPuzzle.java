@@ -44,8 +44,8 @@ public class RiverCrossingPuzzle {
         RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, validCombinationTest);          
         System.out.println(currentState.toString());
         System.out.println(action.toString()); 
-        currentState.applyAction(action);        
-        System.out.println(currentState.toString());
+        RiverWorldState newState = currentState.applyAction(action);        
+        System.out.println(newState.toString());
+        //System.out.println(currentState.toString());
     }
-
 }

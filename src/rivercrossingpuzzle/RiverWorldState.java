@@ -40,12 +40,12 @@ public class RiverWorldState implements State {
     }*/
     public List<ActionStatePair> successor() {
         List<ActionStatePair> result = new ArrayList<ActionStatePair>();
-        for (int i = 0; i < boat.peopleOnBoat.size(); i++) {
-            if (boat.peopleOnBoat.get(i) != null) {
+        while (boat.peopleOnBoat.size() > 0) {
+            if (boat.peopleOnBoat.get(0) != null) {
                 if (boat.location == Location.SOUTH) {
-                    southBank.add(boat.peopleOnBoat.remove(i));
+                    southBank.add(boat.peopleOnBoat.remove(0));
                 } else {
-                    northBank.add(boat.peopleOnBoat.remove(i));
+                    northBank.add(boat.peopleOnBoat.remove(0));
                 }
             }
         }
@@ -84,8 +84,29 @@ public class RiverWorldState implements State {
         }
         System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good.");
 
+        for (int i = 0; i < validCombinationsOnBoat.size(); i++) {
+            RiverWorldAction action = new RiverWorldAction(northBank, southBank, boat, validCombinationsOnBoat.get(i));					//create Action object
+            RiverWorldState nextState = this.applyAction(action);							//apply action to find next state
+            ActionStatePair actionStatePair = new ActionStatePair(action, nextState);	//create action-state pair
+            result.add(actionStatePair);
+        }
         return result;
     }
+
+    public boolean equals(Object state) {
+        if (!(state instanceof RiverWorldState)) //make sure that state is an AntState object
+        {
+            return false;								//if it is not, return false
+        }
+        RiverWorldState riverWorldState = (RiverWorldState) state;
+        Collections.sort(riverWorldState.northBank);
+        Collections.sort(riverWorldState.southBank);
+        return this.northBank.size() == riverWorldState.northBank.size()
+                && this.southBank.size() == riverWorldState.southBank.size()
+                && ((List) this.northBank).equals((List) riverWorldState.northBank)
+                && ((List) this.southBank).equals((List) riverWorldState.southBank)
+                && this.boat.location == riverWorldState.boat.location;	//true if x and y are the same
+    } //end method
 
     /*public int countPeopleInCombination(String combination) {
         String str = combination;
@@ -125,22 +146,45 @@ public class RiverWorldState implements State {
     }
 
     public RiverWorldState applyAction(RiverWorldAction action) {
+        ArrayList<Integer> validCombination = new ArrayList<>();
         for (int i = 0; i < action.validCombination.size(); i++) {
+            validCombination.add(action.validCombination.get(i));
+        }
+        ArrayList<Person> northBank = new ArrayList<>();
+        for (int i = 0; i < action.northBank.size(); i++) {
+            northBank.add(action.northBank.get(i));
+        }
+        ArrayList<Person> southBank = new ArrayList<>();
+        for (int i = 0; i < action.southBank.size(); i++) {
+            southBank.add(action.southBank.get(i));
+        }
+        Boat boat = new Boat(action.boat.seats, action.boat.maxLoad, action.boat.world, action.boat.location);
+
+        for (int i = 0; i < validCombination.size(); i++) {
             if (boat.location == Location.NORTH) {
-                boat.peopleOnBoat.add(northBank.remove(i));
+                boat.peopleOnBoat.add(northBank.get(i));
+                northBank.set(i, null);
             } else if (boat.location == Location.SOUTH) {
-                boat.peopleOnBoat.add(southBank.remove(i));
+                boat.peopleOnBoat.add(southBank.get(i));
+                southBank.set(i, null);
             }
+        }
+        if (boat.location == Location.NORTH) {
+            northBank.removeAll(Collections.singleton(null));
+        } else if (boat.location == Location.SOUTH) {
+            southBank.removeAll(Collections.singleton(null));
         }
         boat.location = boat.location == Location.NORTH ? Location.SOUTH : Location.NORTH;
-        for (int i = 0; i < boat.peopleOnBoat.size(); i++) {
+        while (boat.peopleOnBoat.size() > 0) {
             if (boat.location == Location.NORTH) {
-                northBank.add(boat.peopleOnBoat.remove(i));
+                northBank.add(boat.peopleOnBoat.remove(0));
             } else if (boat.location == Location.SOUTH) {
-                southBank.add(boat.peopleOnBoat.remove(i));
+                southBank.add(boat.peopleOnBoat.remove(0));
             }
         }
-        RiverWorldState result = new RiverWorldState(riverWorld, action.boat, action.northBank, action.southBank);	//create next state from new x,y and ant world
+        Collections.sort(northBank);
+        Collections.sort(southBank);
+        RiverWorldState result = new RiverWorldState(riverWorld, boat, northBank, southBank);	//create next state from new x,y and ant world
         return result;	//return next state as result
     } //end method 
 
