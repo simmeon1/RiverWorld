@@ -17,15 +17,23 @@ import java.util.*;
 public class RiverWorldState implements State {
 
     public Boat boat;
+    public Location boatLocation;
     public RiverWorld riverWorld;
     public ArrayList<Person> northBank;
     public ArrayList<Person> southBank;
 
-    public RiverWorldState(RiverWorld riverWorld, Boat boat, ArrayList<Person> northBank, ArrayList<Person> southBank) {
+    public RiverWorldState(RiverWorld riverWorld, Boat boat, Location boatLocation, ArrayList<Person> northBank, ArrayList<Person> southBank) {
         this.riverWorld = riverWorld;
-        this.boat = boat;
-        this.northBank = northBank;
-        this.southBank = southBank;
+        this.boat = new Boat(boat.seats, boat.maxLoad, boat.world);
+        this.northBank = new ArrayList<>();
+        this.southBank = new ArrayList<>();
+        for (int i = 0; i < northBank.size(); i++) {
+           this.northBank.add(northBank.get(i));
+        }
+        for (int i = 0; i < southBank.size(); i++) {
+           this.southBank.add(southBank.get(i));
+        }  
+        this.boatLocation = boatLocation;
     }
 
     /*public RiverWorld generatePeopleOnBank(ArrayList<Person> listOfPeople, Location bank) {
@@ -42,14 +50,16 @@ public class RiverWorldState implements State {
         List<ActionStatePair> result = new ArrayList<ActionStatePair>();
         while (boat.peopleOnBoat.size() > 0) {
             if (boat.peopleOnBoat.get(0) != null) {
-                if (boat.location == Location.SOUTH) {
+                if (boatLocation == Location.SOUTH) {
                     southBank.add(boat.peopleOnBoat.remove(0));
+                    boatLocation = Location.SOUTH;
                 } else {
                     northBank.add(boat.peopleOnBoat.remove(0));
+                    boatLocation = Location.NORTH;
                 }
             }
         }
-        ArrayList<Person> peopleOnBoatBank = boat.location == Location.SOUTH ? southBank : northBank;
+        ArrayList<Person> peopleOnBoatBank = boatLocation == Location.SOUTH ? southBank : northBank;
         ArrayList<ArrayList<Integer>> possibleCombinationsOnBoat = getPeopleCombinationsOnBoat(peopleOnBoatBank);
         ArrayList<ArrayList<Integer>> validCombinationsOnBoat = new ArrayList<>();
 
@@ -85,7 +95,7 @@ public class RiverWorldState implements State {
         System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good.");
 
         for (int i = 0; i < validCombinationsOnBoat.size(); i++) {
-            RiverWorldAction action = new RiverWorldAction(northBank, southBank, boat, validCombinationsOnBoat.get(i));					//create Action object
+            RiverWorldAction action = new RiverWorldAction(northBank, southBank, boat, boatLocation, validCombinationsOnBoat.get(i));					//create Action object
             RiverWorldState nextState = this.applyAction(action);							//apply action to find next state
             ActionStatePair actionStatePair = new ActionStatePair(action, nextState);	//create action-state pair
             result.add(actionStatePair);
@@ -93,6 +103,7 @@ public class RiverWorldState implements State {
         return result;
     }
 
+    @Override
     public boolean equals(Object state) {
         if (!(state instanceof RiverWorldState)) //make sure that state is an AntState object
         {
@@ -105,8 +116,13 @@ public class RiverWorldState implements State {
                 && this.southBank.size() == riverWorldState.southBank.size()
                 && ((List) this.northBank).equals((List) riverWorldState.northBank)
                 && ((List) this.southBank).equals((List) riverWorldState.southBank)
-                && this.boat.location == riverWorldState.boat.location;	//true if x and y are the same
+                && (this.boatLocation == Location.UNKNOWN || this.boatLocation == riverWorldState.boatLocation);	//true if x and y are the same
     } //end method
+
+    /*@Override
+    public int hashCode() {
+        return this.northBank.hashCode() + this.southBank.hashCode() + this.boatLocation.hashCode();
+    }*/
 
     /*public int countPeopleInCombination(String combination) {
         String str = combination;
@@ -158,33 +174,35 @@ public class RiverWorldState implements State {
         for (int i = 0; i < action.southBank.size(); i++) {
             southBank.add(action.southBank.get(i));
         }
-        Boat boat = new Boat(action.boat.seats, action.boat.maxLoad, action.boat.world, action.boat.location);
+        Boat boat = new Boat(action.boat.seats, action.boat.maxLoad, action.boat.world);
+        Location boatLocation = action.boatLocation;
 
         for (int i = 0; i < validCombination.size(); i++) {
-            if (boat.location == Location.NORTH) {
+            if (boatLocation == Location.NORTH) {
                 boat.peopleOnBoat.add(northBank.get(i));
                 northBank.set(i, null);
-            } else if (boat.location == Location.SOUTH) {
+            } else {
                 boat.peopleOnBoat.add(southBank.get(i));
                 southBank.set(i, null);
+                boatLocation = Location.SOUTH;
             }
         }
-        if (boat.location == Location.NORTH) {
+        if (boatLocation == Location.NORTH) {
             northBank.removeAll(Collections.singleton(null));
-        } else if (boat.location == Location.SOUTH) {
+        } else if (boatLocation == Location.SOUTH) {
             southBank.removeAll(Collections.singleton(null));
         }
-        boat.location = boat.location == Location.NORTH ? Location.SOUTH : Location.NORTH;
+        boatLocation = boatLocation == Location.NORTH ? Location.SOUTH : Location.NORTH;
         while (boat.peopleOnBoat.size() > 0) {
-            if (boat.location == Location.NORTH) {
+            if (boatLocation == Location.NORTH) {
                 northBank.add(boat.peopleOnBoat.remove(0));
-            } else if (boat.location == Location.SOUTH) {
+            } else if (boatLocation == Location.SOUTH) {
                 southBank.add(boat.peopleOnBoat.remove(0));
             }
         }
         Collections.sort(northBank);
         Collections.sort(southBank);
-        RiverWorldState result = new RiverWorldState(riverWorld, boat, northBank, southBank);	//create next state from new x,y and ant world
+        RiverWorldState result = new RiverWorldState(riverWorld, boat, boatLocation, northBank, southBank);	//create next state from new x,y and ant world
         return result;	//return next state as result
     } //end method 
 
@@ -215,21 +233,21 @@ public class RiverWorldState implements State {
             peopleOnNorthBank += "empty";
         } else {
             for (int i = 0; i < northBank.size(); i++) {
-                peopleOnNorthBank += northBank.get(i).name + " , ";
+                peopleOnNorthBank += northBank.get(i).toString();
             }
         }
         if (southBank.size() == 0) {
             peopleOnSouthBank += "empty";
         } else {
             for (int i = 0; i < southBank.size(); i++) {
-                peopleOnSouthBank += southBank.get(i).name + " , ";
+                peopleOnSouthBank += southBank.get(i).toString();
             }
         }
         String output = "-----------NORTH BANK-----------\n";
         output += peopleOnNorthBank;
-        output += boat.location == Location.NORTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        output += boatLocation == Location.NORTH ? "\nBOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
         output += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        output += boat.location == Location.SOUTH ? "\nBOAT(" + boat.getCountOfPeopleOnBoat() + ")~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        output += boatLocation == Location.SOUTH ? "\nBOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         output += peopleOnSouthBank;
         output += "\n-----------SOUTH BANK-----------\n";
         output += "\n------------------------------------------------------------------------\n";

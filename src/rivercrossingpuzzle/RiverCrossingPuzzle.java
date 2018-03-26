@@ -21,9 +21,9 @@ public class RiverCrossingPuzzle {
     public static void main(String[] args) {
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
         listOfPeople.add(new Person("Adam", 100, true));
-        listOfPeople.add(new Person("Betty", 90, false));
-        listOfPeople.add(new Person("Claire", 50, true));
-        listOfPeople.add(new Person("Dave", 30, false));
+        //listOfPeople.add(new Person("Betty", 90, false));
+        //listOfPeople.add(new Person("Claire", 50, true));
+        //listOfPeople.add(new Person("Dave", 30, false));
         //listOfPeople.add(new Person(90, true));
         //listOfPeople.add(new Person(55, true));
         //listOfPeople.add(new Person(65, false));
@@ -32,21 +32,39 @@ public class RiverCrossingPuzzle {
         //listOfPeople.add(new Person(95, true));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(2, 155, riverWorld, Location.SOUTH);
-        RiverWorldState currentState = new RiverWorldState(riverWorld, boat, emptyListOfPeople, listOfPeople);
-        RiverWorldState goalState = new RiverWorldState(riverWorld, boat, listOfPeople, emptyListOfPeople);
+        Boat boat = new Boat(2, 155, riverWorld);
+        RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
+        RiverWorldState currentStateCopy = new RiverWorldState(riverWorld, boat, Location.UNKNOWN, emptyListOfPeople, listOfPeople);
+        RiverWorldState currentStateCopyTwo = new RiverWorldState(riverWorld, boat, Location.UNKNOWN, emptyListOfPeople, listOfPeople);
+        RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.SOUTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
         //System.out.println(goalState.toString());
-        currentState.successor();
+        //currentState.successor();
         ArrayList<Integer> validCombinationTest = new ArrayList<>();
         validCombinationTest.add(0);
         validCombinationTest.add(2);
         //System.out.println(currentState.toString());
-        RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, validCombinationTest);          
-        System.out.println(currentState.toString());
-        System.out.println(action.toString()); 
-        RiverWorldState newState = currentState.applyAction(action);        
-        System.out.println(newState.toString());
+        //RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, validCombinationTest);
         //System.out.println(currentState.toString());
-    }
+        //System.out.println(action.toString());
+        //RiverWorldState newState = currentState.applyAction(action);
+        //System.out.println(newState.toString());
+        //System.out.println(currentState.toString());
+        //System.out.println(currentState.equals(currentState));
+        System.out.println(currentState.hashCode());
+        System.out.println(currentStateCopy.hashCode());
+        System.out.println(currentStateCopyTwo.hashCode());
+        SearchProblem problem = new RiverWorldRouting(currentState, goalState, riverWorld);
+        System.out.println("Searching...");		//print some message
+        Path path = problem.search();				//perform search, get result
+        System.out.println("Done!");			//print some message
+        if (path == null) //if it is null, no solution
+        {
+            System.out.println("No solution");
+        } else {
+            //path.print();							//otherwise print path
+            System.out.println("Nodes visited: " + problem.nodeVisited);
+            System.out.println("Cost: " + path.cost + "\n");
+        }
+    } //end method
 }

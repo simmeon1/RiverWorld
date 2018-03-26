@@ -18,26 +18,22 @@ public class Boat {
     public int seats;
     public double maxLoad;
     public ArrayList<Person> peopleOnBoat;
-    public Location location;
     public RiverWorld world;
-    //public Location location;
 
-    public Boat(int seats, double maxLoad, RiverWorld world, Location location) {
+    public Boat(int seats, double maxLoad, RiverWorld world) {
         this.seats = seats;
         this.maxLoad = maxLoad;
         this.world = world;
         this.peopleOnBoat = new ArrayList<Person>();
-        this.location = location;
-        //this.location = Location.SOUTH;
     }
-    
-    public Person loadPersonOnBoat (Person person) {
+
+    public Person loadPersonOnBoat(Person person) {
         peopleOnBoat.add(person);
         return person;
     }
-    
-    public int getCountOfPeopleOnBoat () {
+
+    public int getCountOfPeopleOnBoat() {
         return peopleOnBoat.size();
     }
-     
+
 }
