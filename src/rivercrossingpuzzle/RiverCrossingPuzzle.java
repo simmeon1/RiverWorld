@@ -23,7 +23,7 @@ public class RiverCrossingPuzzle {
         listOfPeople.add(new Person("Adam", 100, true));
         listOfPeople.add(new Person("Betty", 90, true));
         listOfPeople.add(new Person("Claire", 50, true));
-        listOfPeople.add(new Person("Dave", 30, true));
+        //listOfPeople.add(new Person("Dave", 30, false));
         //listOfPeople.add(new Person(90, true));
         //listOfPeople.add(new Person(55, true));
         //listOfPeople.add(new Person(65, false));
@@ -32,7 +32,7 @@ public class RiverCrossingPuzzle {
         //listOfPeople.add(new Person(95, true));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(4, 400, riverWorld);
+        Boat boat = new Boat(2, 400, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
@@ -49,8 +49,8 @@ public class RiverCrossingPuzzle {
         //System.out.println(newState.toString());
         //System.out.println(currentState.toString());
         //System.out.println(currentState.equals(currentState));
-        System.out.println(currentState.hashCode());
-        System.out.println(goalState.hashCode());
+        //System.out.println(currentState.hashCode());
+        //System.out.println(goalState.hashCode());
         SearchProblem problem = new RiverWorldRouting(currentState, goalState, riverWorld);
         System.out.println("Searching...");		//print some message
         Path path = problem.search();				//perform search, get result
@@ -59,7 +59,7 @@ public class RiverCrossingPuzzle {
         {
             System.out.println("No solution");
         } else {
-            //path.print();							//otherwise print path
+            path.print();							//otherwise print path
             System.out.println("Nodes visited: " + problem.nodeVisited);
             System.out.println("Cost: " + path.cost + "\n");
         }

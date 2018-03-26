@@ -6,5 +6,5 @@
 package rivercrossingpuzzle;
 
 public enum Location {
-    NORTH, SOUTH, UNKNOWN;
+    NORTH, SOUTH;
 } //end enum

@@ -69,8 +69,8 @@ public class RiverWorldState implements State {
                 continue;
             }
             if (currentCombination.size() > boat.seats) {
-                System.out.println("Combination " + currentCombination + " is not good due to needed seats being "
-                        + currentCombination.size() + "/" + boat.seats + ".");
+                //System.out.println("Combination " + currentCombination + " is not good due to needed seats being "
+                //        + currentCombination.size() + "/" + boat.seats + ".");
                 continue;
             }
             double totalWeightOfCombination = 0;
@@ -84,15 +84,17 @@ public class RiverWorldState implements State {
             }
             if (canAnyoneSail && totalWeightOfCombination <= boat.maxLoad) {
                 validCombinationsOnBoat.add(currentCombination);
-                System.out.println("Combination " + currentCombination + " is good.");
+                //System.out.println("Combination " + currentCombination + " is good.");
             } else if (totalWeightOfCombination > boat.maxLoad) {
-                System.out.println("Combination " + currentCombination + " is not good due to total weight being "
-                        + totalWeightOfCombination + "/" + boat.maxLoad + ".");
+                //System.out.println("Combination " + currentCombination + " is not good due to total weight being "
+                //        + totalWeightOfCombination + "/" + boat.maxLoad + ".");
             } else if (!canAnyoneSail) {
-                System.out.println("Combination " + currentCombination + " is not good due to no sailors.");
+                //System.out.println("Combination " + currentCombination + " is not good due to no sailors.");
             }
         }
-        System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good.");
+        System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good when:"
+                + "\nNorth is: " + northBank.toString() + "\nSouth is: " + southBank + "\nBoat is at " + boatLocation
+                + "\n-----------------------");
 
         for (int i = 0; i < validCombinationsOnBoat.size(); i++) {
             RiverWorldAction action = new RiverWorldAction(northBank, southBank, boat, boatLocation, validCombinationsOnBoat.get(i));					//create Action object
@@ -104,8 +106,8 @@ public class RiverWorldState implements State {
     }
 
     @Override
-    public boolean equals(Object state) {
-        if (!(state instanceof RiverWorldState)) //make sure that state is an AntState object
+    public boolean equals(Object otherState) {
+        /*if (!(state instanceof RiverWorldState)) //make sure that state is an AntState object
         {
             return false;								//if it is not, return false
         }
@@ -116,7 +118,8 @@ public class RiverWorldState implements State {
                 && this.southBank.size() == riverWorldState.southBank.size()
                 && ((List) this.northBank).equals((List) riverWorldState.northBank)
                 && ((List) this.southBank).equals((List) riverWorldState.southBank)
-                && (this.boatLocation == Location.UNKNOWN || this.boatLocation == riverWorldState.boatLocation);	//true if x and y are the same
+                && (this.boatLocation == riverWorldState.boatLocation);	//true if x and y are the same*/
+        return this.hashCode() == otherState.hashCode();
     } //end method
 
     @Override
@@ -136,6 +139,7 @@ public class RiverWorldState implements State {
             result += southBank.get(i).weight * 40;
             result += southBank.get(i).canSail ? 7000 : 3000;
         }
+        result += boatLocation == Location.NORTH ? 500 : 1000;
         return result;
 
         //return this.northBank.hashCode() + this.southBank.hashCode() + this.boatLocation.hashCode();
@@ -247,27 +251,23 @@ public class RiverWorldState implements State {
         String peopleOnNorthBank = "";
         String peopleOnSouthBank = "";
         if (northBank.size() == 0) {
-            peopleOnNorthBank += "empty";
+            peopleOnNorthBank += "empty\n";
         } else {
-            for (int i = 0; i < northBank.size(); i++) {
-                peopleOnNorthBank += northBank.get(i).toString();
-            }
+            peopleOnNorthBank += northBank.toString() + "\n";
         }
         if (southBank.size() == 0) {
-            peopleOnSouthBank += "empty";
+            peopleOnSouthBank += "empty\n";
         } else {
-            for (int i = 0; i < southBank.size(); i++) {
-                peopleOnSouthBank += southBank.get(i).toString();
-            }
+            peopleOnSouthBank += southBank.toString() + "\n";
         }
         String output = "-----------NORTH BANK-----------\n";
         output += peopleOnNorthBank;
-        output += boatLocation == Location.NORTH ? "\nBOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        output += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        output += boatLocation == Location.SOUTH ? "\nBOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        output += boatLocation == Location.NORTH ? "BOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        output += "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        output += boatLocation == Location.SOUTH ? "BOAT~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" : "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         output += peopleOnSouthBank;
-        output += "\n-----------SOUTH BANK-----------\n";
-        output += "\n------------------------------------------------------------------------\n";
+        output += "-----------SOUTH BANK-----------\n";
+        output += "------------------------------------------------------------------------";
         return output;
     }
 }
