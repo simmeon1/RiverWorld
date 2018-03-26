@@ -92,9 +92,9 @@ public class RiverWorldState implements State {
                 //System.out.println("Combination " + currentCombination + " is not good due to no sailors.");
             }
         }
-        System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good when:"
-                + "\nNorth is: " + northBank.toString() + "\nSouth is: " + southBank + "\nBoat is at " + boatLocation
-                + "\n-----------------------");
+        //System.out.println("End result: " + validCombinationsOnBoat.size() + "/" + possibleCombinationsOnBoat.size() + " combinations are good when:"
+          //      + "\nNorth is: " + northBank.toString() + "\nSouth is: " + southBank + "\nBoat is at " + boatLocation
+            //    + "\n-----------------------");
 
         for (int i = 0; i < validCombinationsOnBoat.size(); i++) {
             RiverWorldAction action = new RiverWorldAction(northBank, southBank, boat, boatLocation, validCombinationsOnBoat.get(i));					//create Action object

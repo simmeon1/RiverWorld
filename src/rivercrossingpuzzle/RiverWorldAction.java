@@ -62,7 +62,7 @@ public class RiverWorldAction extends Action {
         }
         Boat boat = new Boat(this.boat.seats, this.boat.maxLoad, this.boat.world);
         Location boatLocation = this.boatLocation;
-        String result = "North is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation;
+        String result = "North is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation + "\n";
         for (int i = 0; i < validCombination.size(); i++) {
             if (boatLocation == Location.NORTH) {
                 boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
@@ -77,8 +77,8 @@ public class RiverWorldAction extends Action {
         } else if (boatLocation == Location.SOUTH) {
             southBank.removeAll(Collections.singleton(null));
         }
-        result += "\nBoat has transported: " + boat.peopleOnBoat.toString() + " from " + (boatLocation == Location.NORTH ? "NORTH" : "SOUTH")
-                + " to " + (boatLocation == Location.NORTH ? "SOUTH" : "NORTH");
+        result += "Boat has transported: " + boat.peopleOnBoat.toString() + " from " + (boatLocation == Location.NORTH ? "NORTH" : "SOUTH")
+                + " to " + (boatLocation == Location.NORTH ? "SOUTH" : "NORTH") + "\n";
         boatLocation = boatLocation == Location.NORTH ? Location.SOUTH : Location.NORTH;
         while (boat.peopleOnBoat.size() > 0) {
             if (boatLocation == Location.NORTH) {
@@ -87,8 +87,8 @@ public class RiverWorldAction extends Action {
                 southBank.add(boat.peopleOnBoat.remove(0));
             }
         }
-        result += "\nNorth is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation;
-        result += "\n------------------------------------------------------------------------";
+        result += "North is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation + "\n";
+        result += "------------------------------------------------------------------------";
         return result;
     }
 }

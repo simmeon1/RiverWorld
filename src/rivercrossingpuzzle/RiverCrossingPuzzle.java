@@ -21,18 +21,19 @@ public class RiverCrossingPuzzle {
     public static void main(String[] args) {
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
         listOfPeople.add(new Person("Adam", 100, true));
-        listOfPeople.add(new Person("Betty", 90, true));
+        listOfPeople.add(new Person("Betty", 90, false));
         listOfPeople.add(new Person("Claire", 50, true));
         listOfPeople.add(new Person("Dave", 30, false));
-        //listOfPeople.add(new Person("Bcam", 100, true));
-        //listOfPeople.add(new Person(55, true));
-        //listOfPeople.add(new Person(65, false));
-        //listOfPeople.add(new Person(75, true));
-        //listOfPeople.add(new Person(85, false));
-        //listOfPeople.add(new Person(95, true));
+        listOfPeople.add(new Person("Ewan", 110, true));
+        listOfPeople.add(new Person("Frank", 150, false));
+        listOfPeople.add(new Person("George", 65, false));
+        listOfPeople.add(new Person("Harry", 85, true));
+        listOfPeople.add(new Person("Ian", 50, false));
+        //listOfPeople.add(new Person("Jack", 120, true));
+        //listOfPeople.add(new Person("Kurt", 100, false));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(2, 140, riverWorld);
+        Boat boat = new Boat(4, 200, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
