@@ -54,6 +54,7 @@ public class RiverWorldAction extends Action {
             }
         }
         result += "\nNorth is: " + northBank.toString() + ". South is: " + southBank.toString() + ". Boat is at: " + boat.location;
+        result += "\n------------------------------------------------------------------------\n";
         return result;
     }
 }

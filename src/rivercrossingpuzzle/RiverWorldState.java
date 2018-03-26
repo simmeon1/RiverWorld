@@ -124,6 +124,26 @@ public class RiverWorldState implements State {
         return possibleCombinations;
     }
 
+    public RiverWorldState applyAction(RiverWorldAction action) {
+        for (int i = 0; i < action.validCombination.size(); i++) {
+            if (boat.location == Location.NORTH) {
+                boat.peopleOnBoat.add(northBank.remove(i));
+            } else if (boat.location == Location.SOUTH) {
+                boat.peopleOnBoat.add(southBank.remove(i));
+            }
+        }
+        boat.location = boat.location == Location.NORTH ? Location.SOUTH : Location.NORTH;
+        for (int i = 0; i < boat.peopleOnBoat.size(); i++) {
+            if (boat.location == Location.NORTH) {
+                northBank.add(boat.peopleOnBoat.remove(i));
+            } else if (boat.location == Location.SOUTH) {
+                southBank.add(boat.peopleOnBoat.remove(i));
+            }
+        }
+        RiverWorldState result = new RiverWorldState(riverWorld, action.boat, action.northBank, action.southBank);	//create next state from new x,y and ant world
+        return result;	//return next state as result
+    } //end method 
+
     /*public ArrayList<Person> getPeopleOnBank(ArrayList<Person> bank) {
         int result = 0;
         for (int i = 0; i < bank.size(); i++) {
