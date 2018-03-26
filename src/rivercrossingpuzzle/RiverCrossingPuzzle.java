@@ -21,9 +21,9 @@ public class RiverCrossingPuzzle {
     public static void main(String[] args) {
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
         listOfPeople.add(new Person("Adam", 100, true));
-        //listOfPeople.add(new Person("Betty", 90, false));
-        //listOfPeople.add(new Person("Claire", 50, true));
-        //listOfPeople.add(new Person("Dave", 30, false));
+        listOfPeople.add(new Person("Betty", 90, true));
+        listOfPeople.add(new Person("Claire", 50, true));
+        listOfPeople.add(new Person("Dave", 30, true));
         //listOfPeople.add(new Person(90, true));
         //listOfPeople.add(new Person(55, true));
         //listOfPeople.add(new Person(65, false));
@@ -32,11 +32,9 @@ public class RiverCrossingPuzzle {
         //listOfPeople.add(new Person(95, true));
         ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(2, 155, riverWorld);
+        Boat boat = new Boat(4, 400, riverWorld);
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
-        RiverWorldState currentStateCopy = new RiverWorldState(riverWorld, boat, Location.UNKNOWN, emptyListOfPeople, listOfPeople);
-        RiverWorldState currentStateCopyTwo = new RiverWorldState(riverWorld, boat, Location.UNKNOWN, emptyListOfPeople, listOfPeople);
-        RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.SOUTH, listOfPeople, emptyListOfPeople);
+        RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
         //System.out.println(currentState.toString());
         //System.out.println(goalState.toString());
         //currentState.successor();
@@ -52,8 +50,7 @@ public class RiverCrossingPuzzle {
         //System.out.println(currentState.toString());
         //System.out.println(currentState.equals(currentState));
         System.out.println(currentState.hashCode());
-        System.out.println(currentStateCopy.hashCode());
-        System.out.println(currentStateCopyTwo.hashCode());
+        System.out.println(goalState.hashCode());
         SearchProblem problem = new RiverWorldRouting(currentState, goalState, riverWorld);
         System.out.println("Searching...");		//print some message
         Path path = problem.search();				//perform search, get result

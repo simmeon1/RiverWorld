@@ -65,11 +65,11 @@ public class RiverWorldAction extends Action {
         String result = "North is: " + northBank.toString() + ". South is: " + southBank.toString() + ". Boat is at: " + boatLocation;
         for (int i = 0; i < validCombination.size(); i++) {
             if (boatLocation == Location.NORTH) {
-                boat.peopleOnBoat.add(northBank.get(i));
-                northBank.set(i, null);
+                boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
+                northBank.set(validCombination.get(i), null);
             } else if (boatLocation == Location.SOUTH) {
-                boat.peopleOnBoat.add(southBank.get(i));
-                southBank.set(i, null);
+                boat.peopleOnBoat.add(southBank.get(validCombination.get(i)));
+                southBank.set(validCombination.get(i), null);
             }
         }
         if (boatLocation == Location.NORTH) {

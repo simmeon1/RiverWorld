@@ -28,11 +28,11 @@ public class RiverWorldState implements State {
         this.northBank = new ArrayList<>();
         this.southBank = new ArrayList<>();
         for (int i = 0; i < northBank.size(); i++) {
-           this.northBank.add(northBank.get(i));
+            this.northBank.add(northBank.get(i));
         }
         for (int i = 0; i < southBank.size(); i++) {
-           this.southBank.add(southBank.get(i));
-        }  
+            this.southBank.add(southBank.get(i));
+        }
         this.boatLocation = boatLocation;
     }
 
@@ -119,10 +119,27 @@ public class RiverWorldState implements State {
                 && (this.boatLocation == Location.UNKNOWN || this.boatLocation == riverWorldState.boatLocation);	//true if x and y are the same
     } //end method
 
-    /*@Override
+    @Override
     public int hashCode() {
-        return this.northBank.hashCode() + this.southBank.hashCode() + this.boatLocation.hashCode();
-    }*/
+        int result = 0;
+        for (int i = 0; i < northBank.size(); i++) {
+            for (int j = 0; j < northBank.get(i).name.length(); j++) {
+                result += northBank.get(i).name.charAt(j) * (i + 1);
+            }
+            result += northBank.get(i).weight * 20;
+            result += northBank.get(i).canSail ? 5000 : 1000;
+        }
+        for (int i = 0; i < southBank.size(); i++) {
+            for (int j = 0; j < southBank.get(i).name.length(); j++) {
+                result += southBank.get(i).name.charAt(j) * (i + 3);
+            }
+            result += southBank.get(i).weight * 40;
+            result += southBank.get(i).canSail ? 7000 : 3000;
+        }
+        return result;
+
+        //return this.northBank.hashCode() + this.southBank.hashCode() + this.boatLocation.hashCode();
+    }
 
     /*public int countPeopleInCombination(String combination) {
         String str = combination;
@@ -179,11 +196,11 @@ public class RiverWorldState implements State {
 
         for (int i = 0; i < validCombination.size(); i++) {
             if (boatLocation == Location.NORTH) {
-                boat.peopleOnBoat.add(northBank.get(i));
-                northBank.set(i, null);
+                boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
+                northBank.set(validCombination.get(i), null);
             } else {
-                boat.peopleOnBoat.add(southBank.get(i));
-                southBank.set(i, null);
+                boat.peopleOnBoat.add(southBank.get(validCombination.get(i)));
+                southBank.set(validCombination.get(i), null);
                 boatLocation = Location.SOUTH;
             }
         }
