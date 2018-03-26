@@ -215,14 +215,14 @@ public class RiverWorldState implements State {
             peopleOnNorthBank += "empty";
         } else {
             for (int i = 0; i < northBank.size(); i++) {
-                peopleOnNorthBank += northBank.get(i).weight + " , ";
+                peopleOnNorthBank += northBank.get(i).name + " , ";
             }
         }
         if (southBank.size() == 0) {
             peopleOnSouthBank += "empty";
         } else {
             for (int i = 0; i < southBank.size(); i++) {
-                peopleOnSouthBank += southBank.get(i).weight + " , ";
+                peopleOnSouthBank += southBank.get(i).name + " , ";
             }
         }
         String output = "-----------NORTH BANK-----------\n";

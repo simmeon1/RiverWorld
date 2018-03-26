@@ -6,30 +6,39 @@
 package rivercrossingpuzzle;
 
 import cm3038.search.*;
-import java.util.Random;
 
 /**
  *
  * @author Simeon
  */
 public class Person implements Comparable<Person> {
-    public int id;
+
+    public String name;
     public double weight;
     public boolean canSail;
-    
-    public Person (double weight, boolean canSail) {
-        Random rand = new Random();
-        this.id = rand.nextInt(9999999)+1;
+
+    public Person(String name, double weight, boolean canSail) {
+        this.name = name;
         this.weight = weight;
         this.canSail = canSail;
     }
-    
+
     public String toString() {
-        return "ID: " + id + ". Weight: " + weight + ". Sail? " + canSail;
+        return name + "(" + weight + ")" + (canSail ? "[S]" : "");
     }
-    
+
     @Override
     public int compareTo(Person o) {
-        return id - o.id;
+        // convert input string to char array
+        if (name.compareTo(o.name) == 0) {
+            if (weight == o.weight) {
+                if (canSail == o.canSail) {
+                    return 0;
+                }
+                return canSail ? 0 : 1;
+            }
+            return weight > o.weight ? 0 : 1;
+        }
+        return name.compareTo(o.name);
     }
 }

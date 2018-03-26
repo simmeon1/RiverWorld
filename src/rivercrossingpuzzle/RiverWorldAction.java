@@ -30,6 +30,15 @@ public class RiverWorldAction extends Action {
             this.southBank.add(southBank.get(i));
         }
         this.boat = new Boat(boat.seats, boat.maxLoad, boat.world, boat.location);
+        double loadOnBoat = 0;
+        for (int i = 0; i < this.validCombination.size(); i++) {
+            if (this.boat.location == Location.NORTH) {
+                loadOnBoat += this.northBank.get(i).weight;
+            } else if (this.boat.location == Location.SOUTH) {
+                loadOnBoat += this.southBank.get(i).weight;
+            }           
+        }
+        this.cost = loadOnBoat;
     }
 
     @Override
