@@ -22,7 +22,7 @@ public class RiverCrossingPuzzle {
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
         listOfPeople.add(new Person(50, true));
         listOfPeople.add(new Person(60, false));
-        listOfPeople.add(new Person(70, true));
+        //listOfPeople.add(new Person(70, true));
         //listOfPeople.add(new Person(80, false));
         //listOfPeople.add(new Person(90, true));
         //listOfPeople.add(new Person(55, true));
@@ -38,7 +38,11 @@ public class RiverCrossingPuzzle {
         //System.out.println(currentState.toString());
         //System.out.println(goalState.toString());
         currentState.successor();
-        //System.out.println(currentState.toString());
+        ArrayList<Integer> validCombinationTest = new ArrayList<>();
+        validCombinationTest.add(0);
+        RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, validCombinationTest);
+        System.out.println(action.toString());
+        System.out.println(currentState.toString());
     }
 
 }

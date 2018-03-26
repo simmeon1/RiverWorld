@@ -87,7 +87,7 @@ public class RiverWorldState implements State {
         return result;
     }
 
-    public int countPeopleInCombination(String combination) {
+    /*public int countPeopleInCombination(String combination) {
         String str = combination;
         String findStr = "(";
         int lastIndex = 0;
@@ -103,8 +103,7 @@ public class RiverWorldState implements State {
             }
         }
         return count;
-    }
-
+    }*/
     public ArrayList<ArrayList<Integer>> getPeopleCombinationsOnBoat(ArrayList<Person> boatBank) {
         int count = (int) Math.pow(2, boatBank.size());
         ArrayList<ArrayList<Integer>> possibleCombinations = new ArrayList<>();
@@ -148,16 +147,18 @@ public class RiverWorldState implements State {
     public String toString() {
         String peopleOnNorthBank = "";
         String peopleOnSouthBank = "";
-        for (int i = 0; i < northBank.size(); i++) {
-            if (northBank.get(i) != null) {
+        if (northBank.size() == 0) {
+            peopleOnNorthBank += "empty";
+        } else {
+            for (int i = 0; i < northBank.size(); i++) {
                 peopleOnNorthBank += northBank.get(i).weight + " , ";
-            } else {
-                peopleOnNorthBank += "empty, ";
             }
-            if (southBank.get(i) != null) {
+        }
+        if (southBank.size() == 0) {
+            peopleOnSouthBank += "empty";
+        } else {
+            for (int i = 0; i < southBank.size(); i++) {
                 peopleOnSouthBank += southBank.get(i).weight + " , ";
-            } else {
-                peopleOnSouthBank += "empty, ";
             }
         }
         String output = "-----------NORTH BANK-----------\n";
