@@ -18,8 +18,8 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
 
     /**
      * Creates the RiverWorldRouting object.
-     * @param start
-     * @param goal
+     * @param start Start state.
+     * @param goal Goal state.
      */
     public RiverWorldRouting(State start, State goal) {
         super(start, goal);
@@ -40,7 +40,7 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
         // that has the lowest cost to get to. The heuristic adds an admissable cost
         // to the goal state from the current state and influences the paths explored first.
         return node.getCost() + this.heuristic(node.state);
-    } //end method
+    } 
 
     /**
      * Calculates a heuristic.
@@ -49,9 +49,10 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
      * that in this scenario there are boats on both ends, they have no weight or
      * seat limit and that everybody can sail. This is an admissible heuristic as
      * it cannot be costlier than the best case solution (boat is on the correct bank
-     * and everybody can get on). Realistically, the boat and people will have their limits.
-     * @param state
-     * @return
+     * and everybody can get on and reach the goal state once sailed). 
+     * Realistically, the boat and people will have their limits and will take more turns.
+     * @param state Current state.
+     * @return Heuristic cost.
      */
     public double heuristic(State state) {
         double result = 0;
@@ -81,6 +82,7 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
         // so his/her cost is added to the heuristic.
         // The list is based on the goal list from which the members that are already
         // there are removed, leaving only the people that still need to move.
+        // Their cost is added tothe heuristic.
         ArrayList<Person> missingPeopleOnNorthBank = new ArrayList<>(goalNorthBank);
         missingPeopleOnNorthBank.removeAll(currentNorthBank);
         ArrayList<Person> missingPeopleOnSouthBank = new ArrayList<>(goalSouthBank);

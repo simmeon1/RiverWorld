@@ -132,7 +132,7 @@ public class RiverWorldState extends RiverWorld implements State {
      * Compares two states.
      *
      * @param riverWorldState State to compare to.
-     * @return
+     * @return Result of comparison.
      */
     @Override
     public boolean equals(Object riverWorldState) {
@@ -279,7 +279,7 @@ public class RiverWorldState extends RiverWorld implements State {
         }
         Collections.sort(northBank);
         Collections.sort(southBank);
-        RiverWorldState result = new RiverWorldState(riverWorld, boat, boatLocation, northBank, southBank);	//create next state from new x,y and ant world
+        RiverWorldState result = new RiverWorldState(riverWorld, boat, boatLocation, northBank, southBank);
         return result;
     }
     

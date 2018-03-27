@@ -23,13 +23,12 @@ public class RiverWorldAction extends Action {
      *
      * @param riverWorldState The state to read from.
      * @param validCombination The people to transport. Can be one of many
-     * combinations. It is a list which contains lists of integers which are
-     * used as indexes. The lists are of various size and together they
-     * represent the valid combinations of people i.e. the combinations which
-     * can actually get on the boat. The indexes are used to pick out the right
+     * combinations. It is a list which integers which are
+     * used as indexes. A valid combination is one that can actually get on a boat.
+     * The indexes are used to pick out the right
      * people from a bank (depending on where boat is), load them on a boat and
      * move them across.
-     * i.e. Combinations = [[0th guy][0th guy, 1st guy][1th guy, 3rd guy, 4th guy]] etc..
+     * i.e. Combination = [0th guy] OR [0th guy, 1st guy] OR [1st guy, 3rd guy, 4th guy] etc..
      */
     public RiverWorldAction(RiverWorldState riverWorldState, ArrayList<Integer> validCombination) {
 
@@ -52,13 +51,13 @@ public class RiverWorldAction extends Action {
         this.boatLocation = riverWorldState.boatLocation;
 
         // The loadOnBoat is the total weight of the people that may get on the boat.
-        // As it is populated from the valid combinations, it is never over the
+        // As it is populated from the valid combination, it is never over the
         // actual max load of the boat.
         double loadOnBoat = 0;
 
         // Depending on where the boat is, people from that bank are loaded.
-        // The valid combinations contain the indexes of the people in the combination.
-        // i.e. Combinations = [[0th guy][0th guy, 1st guy][1th guy, 3rd guy, 4th guy]] etc..
+        // The valid combination contains the indexes of the people in the combination.
+        // i.e. Combination = [0th guy] OR [0th guy, 1st guy] OR [1th guy, 3rd guy, 4th guy] etc..
         for (int i = 0; i < this.validCombination.size(); i++) {
             if (this.boatLocation == Location.NORTH) {
                 loadOnBoat += this.northBank.get(this.validCombination.get(i)).weight;
@@ -101,7 +100,7 @@ public class RiverWorldAction extends Action {
         for (int i = 0; i < validCombination.size(); i++) {
             if (boatLocation == Location.NORTH) {
                 boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
-                // As valid combinations contains indexes which originate from
+                // As a valid combination contains indexes which originate from
                 // the given bank, we do not want the size of the bank to change
                 // until all people are picked. Instead, the picked "positions"
                 // are replaced with nulls which, when done, get removed.
