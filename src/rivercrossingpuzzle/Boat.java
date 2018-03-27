@@ -1,39 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rivercrossingpuzzle;
 
-import cm3038.search.ActionStatePair;
-import cm3038.search.State;
 import java.util.*;
 
 /**
+ * Models a Boat object to be used in the puzzle.
  *
- * @author Simeon
+ * @author Simeon Dobrudzhanski 1406444
  */
 public class Boat {
 
+    /**
+     * The number of seats that the boat has.
+     */
     public int seats;
-    public double maxLoad;
-    public ArrayList<Person> peopleOnBoat;
-    public RiverWorld world;
 
-    public Boat(int seats, double maxLoad, RiverWorld world) {
+    /**
+     * The maximum weight a boat can handle.
+     */
+    public double maxLoad;
+
+    /**
+     * A list of the current people on the boat.
+     */
+    public ArrayList<Person> peopleOnBoat;
+
+    /**
+     * Creates a boat with the given seats and max load. It is created with no
+     * people.
+     *
+     * @param seats The number of seats that the boat has.
+     * @param maxLoad The maximum weight a boat can handle.
+     * @param world The initial river world.
+     */
+    public Boat(int seats, double maxLoad) {
         this.seats = seats;
         this.maxLoad = maxLoad;
-        this.world = world;
         this.peopleOnBoat = new ArrayList<Person>();
     }
-
-    public Person loadPersonOnBoat(Person person) {
-        peopleOnBoat.add(person);
-        return person;
-    }
-
-    public int getCountOfPeopleOnBoat() {
-        return peopleOnBoat.size();
-    }
-
 }

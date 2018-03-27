@@ -1,10 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rivercrossingpuzzle;
 
+/**
+ * A collection of locations which will mainly identify where the boat is.
+ *
+ * @author Simeon Dobrudzhanski 1406444
+ */
 public enum Location {
-    NORTH, SOUTH;
-} //end enum
+
+    /**
+     * Boat is at North bank.
+     */
+    NORTH,
+    /**
+     * Boat is at South bank.
+     */
+    SOUTH;
+}

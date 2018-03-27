@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rivercrossingpuzzle;
 
 import cm3038.search.*;
-import cm3038.search.informed.*;
 import java.util.*;
 
 /**
- *
- * @author Simeon
+ * River Crossing puzzle main class.
+ * @author Simeon Dobrudzhanski 1406444
  */
 public class RiverCrossingPuzzle {
 
@@ -19,52 +13,76 @@ public class RiverCrossingPuzzle {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        /* The north/south banks are array lists. 
+        The following array lists will be used to create the current and goal
+        state of the puzzle. */
+        ArrayList<Person> emptyListOfPeople = new ArrayList<>();
         ArrayList<Person> listOfPeople = new ArrayList<Person>();
         listOfPeople.add(new Person("Adam", 100, true));
         listOfPeople.add(new Person("Betty", 90, false));
         listOfPeople.add(new Person("Claire", 50, true));
         listOfPeople.add(new Person("Dave", 30, false));
-        listOfPeople.add(new Person("Ewan", 110, true));
-        listOfPeople.add(new Person("Frank", 150, false));
+        listOfPeople.add(new Person("Ewan", 110, false));
+        listOfPeople.add(new Person("Frank", 150, true));
         listOfPeople.add(new Person("George", 65, false));
-        listOfPeople.add(new Person("Harry", 85, true));
-        listOfPeople.add(new Person("Ian", 50, false));
+        //listOfPeople.add(new Person("Harry", 85, true));
+        //listOfPeople.add(new Person("Ian", 50, false));
         //listOfPeople.add(new Person("Jack", 120, true));
         //listOfPeople.add(new Person("Kurt", 100, false));
-        ArrayList<Person> emptyListOfPeople = new ArrayList<Person>();
+        
+        // Testing the RiverWorld object.
         RiverWorld riverWorld = new RiverWorld();
-        Boat boat = new Boat(4, 200, riverWorld);
+        //System.out.println(riverWorld);
+        
+        //Creating a boat;
+        Boat boat = new Boat(2, 200);
+        
+        
+        // Creating the current and goal states.
         RiverWorldState currentState = new RiverWorldState(riverWorld, boat, Location.SOUTH, emptyListOfPeople, listOfPeople);
         RiverWorldState goalState = new RiverWorldState(riverWorld, boat, Location.NORTH, listOfPeople, emptyListOfPeople);
-        //System.out.println(currentState.toString());
-        //System.out.println(goalState.toString());
-        //currentState.successor();
-        ArrayList<Integer> validCombinationTest = new ArrayList<>();
+        /*System.out.println(currentState.toString());
+        System.out.println(goalState.toString());*/
+        
+        
+        // Testing the successor function. The code within it can print out the
+        // good combinations of people.
+        /*currentState.successor();
+        System.out.println(currentState.toString());*/
+        
+        // Testing the action object.
+        /*ArrayList<Integer> validCombinationTest = new ArrayList<>();
         validCombinationTest.add(0);
         validCombinationTest.add(2);
+        RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, currentState.boatLocation, validCombinationTest);
+        System.out.println(action.toString());*/
+        
+        // Testing creating a new state from an action object.
+        /*System.out.println(currentState.toString());        
+        RiverWorldState newState = currentState.applyAction(action);
+        System.out.println(newState.toString());*/
+        
+        
         //System.out.println(currentState.toString());
-        //RiverWorldAction action = new RiverWorldAction(currentState.northBank, currentState.southBank, currentState.boat, validCombinationTest);
-        //System.out.println(currentState.toString());
-        //System.out.println(action.toString());
-        //RiverWorldState newState = currentState.applyAction(action);
-        //System.out.println(newState.toString());
-        //System.out.println(currentState.toString());
-        //System.out.println(currentState.equals(currentState));
+        //System.out.println(currentState.equals(currentState));        
         //System.out.println(currentState.hashCode());
         //System.out.println(goalState.hashCode());
-        SearchProblem problem = new RiverWorldRouting(currentState, goalState, riverWorld);
-        System.out.println("Searching...");		//print some message
-        Path path = problem.search();				//perform search, get result
-        System.out.println("Done!");			//print some message
-        if (path == null) //if it is null, no solution
+        
+        // RUns the solution
+        SearchProblem problem = new RiverWorldRouting(currentState, goalState);
+        System.out.println("Searching...");
+        Path path = problem.search();
+        System.out.println("Done!");
+        if (path == null)
         {
             System.out.println("No solution");
         } else {
-            path.print();							//otherwise print path
+            path.print();
             System.out.println("Nodes visited: " + problem.nodeVisited);
             System.out.println("Cost: " + path.cost + "\n");
         }
         //System.out.println(listOfPeople.get(0).hashCode());
         //System.out.println(listOfPeople.get(3).hashCode());
-    } //end method
+    }
 }

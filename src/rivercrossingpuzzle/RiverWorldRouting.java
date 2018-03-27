@@ -1,39 +1,64 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package rivercrossingpuzzle;
 
-import cm3038.search.Node;
-import cm3038.search.State;
-import cm3038.search.informed.BestFirstSearchProblem;
-import java.util.ArrayList;
+import cm3038.search.*;
+import cm3038.search.informed.*;
+import java.util.*;
 
 /**
- *
- * @author Simeon
+ * Represent the puzzle problem and how to solve it (heuristic)
+ * @author Simeon Dobrudzhanski 1406444
  */
 public class RiverWorldRouting extends BestFirstSearchProblem {
 
-    public RiverWorldState goal;	//the goal state
-    public RiverWorld world;	//the ant world
+    /**
+     * The goal state.
+     */
+    public RiverWorldState goal;
 
-    public RiverWorldRouting(State start, State goal, RiverWorld world) {
+
+    /**
+     * Creates the RiverWorldRouting object.
+     * @param start
+     * @param goal
+     */
+    public RiverWorldRouting(State start, State goal) {
         super(start, goal);
-        this.world = world;
-    } //end method
+    }
 
+    /**
+     * The evaluation function is used to get the cost of a node.
+     * Depending on the cost that node/path might get picked first or later.
+     * Works on the idea that f(n)=g(n)+h(n).
+     * With the heuristic the node that gets picked next is the one that seems the closest
+     * to the goal.
+     * @param node Node/path to get the cost of.
+     * @return The cost.
+     */
     @Override
     public double evaluation(Node node) {
-        return node.getCost() + this.heuristic(node.state);	//f(n)=g(n)+h(n)
+        // Without a heuristic (0), the node/path to get picked first will be the one
+        // that has the lowest cost to get to. The heuristic adds an admissable cost
+        // to the goal state from the current state and influences the paths explored first.
+        return node.getCost() + this.heuristic(node.state);
     } //end method
 
+    /**
+     * Calculates a heuristic.
+     * This heuristic gets its cost by calculating the total weight/cost of the
+     * people which are not on the right banks. In other words, it can be said
+     * that in this scenario there are boats on both ends, they have no weight or
+     * seat limit and that everybody can sail. This is an admissible heuristic as
+     * it cannot be costlier than the best case solution (boat is on the correct bank
+     * and everybody can get on). Realistically, the boat and people will have their limits.
+     * @param state
+     * @return
+     */
     public double heuristic(State state) {
         double result = 0;
+        
+        // Creating local variables in order to not modify the state object.
         RiverWorldState currentRiverWorldState = (RiverWorldState) state;
         RiverWorldState goalState = (RiverWorldState) this.goalState;
-        //Location goalLocation = goal.boatLocation == Location.NORTH ? Location.NORTH : Location.SOUTH;
         ArrayList<Person> currentNorthBank = new ArrayList<>();
         ArrayList<Person> currentSouthBank = new ArrayList<>();
         ArrayList<Person> goalNorthBank = new ArrayList<>();
@@ -50,6 +75,12 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
         for (int i = 0; i < goalState.southBank.size(); i++) {
             goalSouthBank.add(goalState.southBank.get(i));
         }
+        
+        // Array lists of missing people are created.
+        // Whoever is on the wrong bank will need to get across at some point
+        // so his/her cost is added to the heuristic.
+        // The list is based on the goal list from which the members that are already
+        // there are removed, leaving only the people that still need to move.
         ArrayList<Person> missingPeopleOnNorthBank = new ArrayList<>(goalNorthBank);
         missingPeopleOnNorthBank.removeAll(currentNorthBank);
         ArrayList<Person> missingPeopleOnSouthBank = new ArrayList<>(goalSouthBank);
@@ -61,8 +92,13 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
             result += missingPeopleOnSouthBank.get(i).weight;
         }
         return result;
-    } //end method
+    }
 
+    /**
+     * Compares two sates.
+     * @param state Other state.
+     * @return True if they match, false if they do not.
+     */
     public boolean isGoal(State state) {
         return state.equals(this.goalState);
     }
