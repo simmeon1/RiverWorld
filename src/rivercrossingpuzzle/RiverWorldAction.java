@@ -34,18 +34,9 @@ public class RiverWorldAction extends Action {
         // The action object is populated with fields which are NOT references 
         // of those from the state, as we do not any changes in the action object
         // to get reflected in the state.
-        this.validCombination = new ArrayList<>();
-        this.southBank = new ArrayList<>();
-        this.northBank = new ArrayList<>();
-        for (int i = 0; i < validCombination.size(); i++) {
-            this.validCombination.add(validCombination.get(i));
-        }
-        for (int i = 0; i < riverWorldState.northBank.size(); i++) {
-            this.northBank.add(riverWorldState.northBank.get(i));
-        }
-        for (int i = 0; i < riverWorldState.southBank.size(); i++) {
-            this.southBank.add(riverWorldState.southBank.get(i));
-        }
+        this.validCombination = new ArrayList<>(validCombination);
+        this.northBank = new ArrayList<>(riverWorldState.northBank);
+        this.southBank = new ArrayList<>(riverWorldState.southBank);
         this.boat = new Boat(riverWorldState.boat.seats, riverWorldState.boat.maxLoad);
         this.boatLocation = riverWorldState.boatLocation;
 
@@ -76,23 +67,17 @@ public class RiverWorldAction extends Action {
     public String toString() {
 
         // Local variables are created exclusively for the toString method.
-        ArrayList<Integer> validCombinationCopy = new ArrayList<>();
-        ArrayList<Person> northBankCopy = new ArrayList<>();
-        ArrayList<Person> southBankCopy = new ArrayList<>();
-        for (int i = 0; i < this.validCombination.size(); i++) {
-            validCombinationCopy.add(this.validCombination.get(i));
-        }
-        for (int i = 0; i < this.northBank.size(); i++) {
-            northBankCopy.add(this.northBank.get(i));
-        }
-        for (int i = 0; i < this.southBank.size(); i++) {
-            southBankCopy.add(this.southBank.get(i));
-        }
+        ArrayList<Integer> validCombinationCopy = new ArrayList<>(this.validCombination);
+        ArrayList<Person> northBankCopy = new ArrayList<>(this.northBank);
+        ArrayList<Person> southBankCopy = new ArrayList<>(this.southBank);
         Boat boatCopy = new Boat(this.boat.seats, this.boat.maxLoad);
         Location boatLocationCopy = this.boatLocation;
 
         // Here is where the people are picked, boat is loaded, transported 
         // and unloaded.
+        // To correctly compare array lists, other than just providing
+        // overriden equals and hashCode methods,
+        // they need to be sorted as well (Person has overridden compareTo method).
         Collections.sort(northBankCopy);
         Collections.sort(southBankCopy);
         String result = "North is: " + northBankCopy.toString() + ".\nSouth is: " + southBankCopy.toString() + ".\nBoat is at: " + boatLocationCopy + "\n";
@@ -126,6 +111,9 @@ public class RiverWorldAction extends Action {
                 southBankCopy.add(boatCopy.peopleOnBoat.remove(0));
             }
         }
+        // To correctly compare array lists, other than just providing
+        // overriden equals and hashCode methods,
+        // they need to be sorted as well (Person has overridden compareTo method).
         Collections.sort(northBankCopy);
         Collections.sort(southBankCopy);
         result += "North is: " + northBankCopy.toString() + ".\nSouth is: " + southBankCopy.toString() + ".\nBoat is at: " + boatLocationCopy + "\n";

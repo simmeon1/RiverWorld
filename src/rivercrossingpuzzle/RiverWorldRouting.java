@@ -59,35 +59,23 @@ public class RiverWorldRouting extends BestFirstSearchProblem {
     public double heuristic(State state) {
         double result = 0;
 
-        // Creating local variables in order to not modify the state object.
+        // Creating local variables in order to not modify the state objects.
         RiverWorldState currentRiverWorldState = (RiverWorldState) state;
         RiverWorldState goalRiverWorldState = (RiverWorldState) this.goalState;
-        ArrayList<Person> currentNorthBank = new ArrayList<>();
-        ArrayList<Person> currentSouthBank = new ArrayList<>();
-        ArrayList<Person> goalNorthBank = new ArrayList<>();
-        ArrayList<Person> goalSouthBank = new ArrayList<>();
-        for (int i = 0; i < currentRiverWorldState.northBank.size(); i++) {
-            currentNorthBank.add(currentRiverWorldState.northBank.get(i));
-        }
-        for (int i = 0; i < currentRiverWorldState.southBank.size(); i++) {
-            currentSouthBank.add(currentRiverWorldState.southBank.get(i));
-        }
-        for (int i = 0; i < goalRiverWorldState.northBank.size(); i++) {
-            goalNorthBank.add(goalRiverWorldState.northBank.get(i));
-        }
-        for (int i = 0; i < goalRiverWorldState.southBank.size(); i++) {
-            goalSouthBank.add(goalRiverWorldState.southBank.get(i));
-        }
+        ArrayList<Person> currentNorthBank = new ArrayList<>(currentRiverWorldState.northBank);
+        ArrayList<Person> currentSouthBank = new ArrayList<>(currentRiverWorldState.southBank);
+        ArrayList<Person> goalNorthBank = new ArrayList<>(goalRiverWorldState.northBank);
+        ArrayList<Person> goalSouthBank = new ArrayList<>(goalRiverWorldState.southBank);
 
         // Array lists of missing people are created.
         // Whoever is on the wrong bank will need to get across at some point
         // so his/her cost is added to the heuristic.
         // The list is based on the goal list from which the members that are already
         // there are removed, leaving only the people that still need to move.
-        // Their cost is added tothe heuristic.
+        // Their cost is added to the heuristic.
         ArrayList<Person> missingPeopleOnNorthBank = new ArrayList<>(goalNorthBank);
-        missingPeopleOnNorthBank.removeAll(currentNorthBank);
         ArrayList<Person> missingPeopleOnSouthBank = new ArrayList<>(goalSouthBank);
+        missingPeopleOnNorthBank.removeAll(currentNorthBank);        
         missingPeopleOnSouthBank.removeAll(currentSouthBank);
         for (int i = 0; i < missingPeopleOnNorthBank.size(); i++) {
             result += missingPeopleOnNorthBank.get(i).weight;

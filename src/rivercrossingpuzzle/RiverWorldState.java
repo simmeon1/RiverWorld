@@ -37,14 +37,10 @@ public class RiverWorldState extends RiverWorld implements State {
      */
     public RiverWorldState(RiverWorld riverWorld, Boat boat, Location boatLocation, ArrayList<Person> northBank, ArrayList<Person> southBank) {
         super();
+        this.northBank.addAll(northBank);
+        this.southBank.addAll(southBank);
         this.riverWorld = riverWorld;
-        this.boat = new Boat(boat.seats, boat.maxLoad);
-        for (int i = 0; i < northBank.size(); i++) {
-            this.northBank.add(northBank.get(i));
-        }
-        for (int i = 0; i < southBank.size(); i++) {
-            this.southBank.add(southBank.get(i));
-        }
+        this.boat = new Boat(boat.seats, boat.maxLoad);       
         this.boatLocation = boatLocation;
     }
 
@@ -95,7 +91,7 @@ public class RiverWorldState extends RiverWorld implements State {
             }
             double totalWeightOfCombination = 0;
             boolean canAnyoneSail = false;
-            
+
             // Iterating over the people in a combination.
             for (int j = 0; j < currentCombination.size(); j++) {
 
@@ -143,6 +139,9 @@ public class RiverWorldState extends RiverWorld implements State {
             return false;
         }
         RiverWorldState otherState = (RiverWorldState) riverWorldState;
+        // To correctly compare array lists, other than just providing
+        // overriden equals and hashCode methods,
+        // they need to be sorted as well (Person has overridden compareTo method).
         Collections.sort(this.northBank);
         Collections.sort(this.southBank);
         Collections.sort(otherState.northBank);
@@ -238,20 +237,14 @@ public class RiverWorldState extends RiverWorld implements State {
 
         // Creating local clean copies that do not reference the ones from the state.
         // We do not want to modify the state in any way.
-        ArrayList<Integer> validCombination = new ArrayList<>();
-        for (int i = 0; i < action.validCombination.size(); i++) {
-            validCombination.add(action.validCombination.get(i));
-        }
-        ArrayList<Person> northBankCopy = new ArrayList<>();
-        for (int i = 0; i < action.northBank.size(); i++) {
-            northBankCopy.add(action.northBank.get(i));
-        }
-        ArrayList<Person> southBankCopy = new ArrayList<>();
-        for (int i = 0; i < action.southBank.size(); i++) {
-            southBankCopy.add(action.southBank.get(i));
-        }
+        ArrayList<Integer> validCombination = new ArrayList<>(action.validCombination);
+        ArrayList<Person> northBankCopy = new ArrayList<>(action.northBank);
+        ArrayList<Person> southBankCopy = new ArrayList<>(action.southBank);
         Boat boatCopy = new Boat(action.boat.seats, action.boat.maxLoad);
         Location boatLocationCopy = action.boatLocation;
+        // To correctly compare array lists, other than just providing
+        // overriden equals and hashCode methods,
+        // they need to be sorted as well (Person has overridden compareTo method).
         Collections.sort(northBankCopy);
         Collections.sort(southBankCopy);
         for (int i = 0; i < validCombination.size(); i++) {
@@ -271,7 +264,7 @@ public class RiverWorldState extends RiverWorld implements State {
         }
         northBankCopy.removeAll(Collections.singleton(null));
         southBankCopy.removeAll(Collections.singleton(null));
-        
+
         // Boat location changes when the people are transported.
         // Depending on which bank it is, that is where the people get unloaded and added.
         boatLocationCopy = boatLocationCopy == Location.NORTH ? Location.SOUTH : Location.NORTH;
@@ -282,12 +275,15 @@ public class RiverWorldState extends RiverWorld implements State {
                 southBankCopy.add(boatCopy.peopleOnBoat.remove(0));
             }
         }
+        // To correctly compare array lists, other than just providing
+        // overriden equals and hashCode methods,
+        // they need to be sorted as well (Person has overridden compareTo method).
         Collections.sort(northBankCopy);
         Collections.sort(southBankCopy);
         RiverWorldState result = new RiverWorldState(riverWorld, boatCopy, boatLocationCopy, northBankCopy, southBankCopy);
         return result;
     }
-    
+
     @Override
     public String toString() {
         String peopleOnNorthBank = "";
