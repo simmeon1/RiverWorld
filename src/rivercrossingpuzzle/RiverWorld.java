@@ -3,12 +3,13 @@ package rivercrossingpuzzle;
 import java.util.*;
 
 /**
- * RiverWorld object which represent the world without people or a boat.
- * Used to build up RiverWorldState objects.
+ * RiverWorld object which represent the world without people or a boat. Used to
+ * build up RiverWorldState objects.
+ *
  * @author Simeon Dobrudzhanski 1406444
  */
 public class RiverWorld {
-    
+
     /**
      * Represents north bank (no people).
      */
@@ -18,13 +19,13 @@ public class RiverWorld {
      * Represents south bank (no people).
      */
     public ArrayList<Person> southBank;
-    
+
     /**
      * Initializes the RiverWorld object.
      */
     public RiverWorld() {
-        northBank = new ArrayList<Person>();
-        southBank = new ArrayList<Person>();
+        northBank = new ArrayList<>();
+        southBank = new ArrayList<>();
     }
 
     @Override

@@ -53,11 +53,12 @@ public class RiverWorldState extends RiverWorld implements State {
      *
      * @return Possible actions.
      */
+    @Override
     public List<ActionStatePair> successor() {
-        List<ActionStatePair> result = new ArrayList<ActionStatePair>();
+        List<ActionStatePair> result = new ArrayList<>();
 
         // Any people on the boat get unloaded first to start clean.
-        while (boat.peopleOnBoat.size() > 0) {
+        while (!boat.peopleOnBoat.isEmpty()) {
             if (boatLocation == Location.SOUTH) {
                 southBank.add(boat.peopleOnBoat.remove(0));
                 boatLocation = Location.SOUTH;
@@ -94,6 +95,8 @@ public class RiverWorldState extends RiverWorld implements State {
             }
             double totalWeightOfCombination = 0;
             boolean canAnyoneSail = false;
+            
+            // Iterating over the people in a combination.
             for (int j = 0; j < currentCombination.size(); j++) {
 
                 // Gets the person that matches the index in the combination.
@@ -140,6 +143,8 @@ public class RiverWorldState extends RiverWorld implements State {
             return false;
         }
         RiverWorldState otherState = (RiverWorldState) riverWorldState;
+        Collections.sort(this.northBank);
+        Collections.sort(this.southBank);
         Collections.sort(otherState.northBank);
         Collections.sort(otherState.southBank);
         return this.northBank.size() == otherState.northBank.size()
@@ -237,49 +242,49 @@ public class RiverWorldState extends RiverWorld implements State {
         for (int i = 0; i < action.validCombination.size(); i++) {
             validCombination.add(action.validCombination.get(i));
         }
-        ArrayList<Person> northBank = new ArrayList<>();
+        ArrayList<Person> northBankCopy = new ArrayList<>();
         for (int i = 0; i < action.northBank.size(); i++) {
-            northBank.add(action.northBank.get(i));
+            northBankCopy.add(action.northBank.get(i));
         }
-        ArrayList<Person> southBank = new ArrayList<>();
+        ArrayList<Person> southBankCopy = new ArrayList<>();
         for (int i = 0; i < action.southBank.size(); i++) {
-            southBank.add(action.southBank.get(i));
+            southBankCopy.add(action.southBank.get(i));
         }
-        Boat boat = new Boat(action.boat.seats, action.boat.maxLoad);
-        Location boatLocation = action.boatLocation;
-        Collections.sort(northBank);
-        Collections.sort(southBank);
+        Boat boatCopy = new Boat(action.boat.seats, action.boat.maxLoad);
+        Location boatLocationCopy = action.boatLocation;
+        Collections.sort(northBankCopy);
+        Collections.sort(southBankCopy);
         for (int i = 0; i < validCombination.size(); i++) {
-            if (boatLocation == Location.NORTH) {
+            if (boatLocationCopy == Location.NORTH) {
 
                 // As valid combinations contains indexes which originate from
                 // the given bank, we do not want the size of the bank to change
                 // until all people are picked. Instead, the picked "positions"
                 // are replaced with nulls which, when done, get removed.
-                boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
-                northBank.set(validCombination.get(i), null);
+                boatCopy.peopleOnBoat.add(northBankCopy.get(validCombination.get(i)));
+                northBankCopy.set(validCombination.get(i), null);
             } else {
-                boat.peopleOnBoat.add(southBank.get(validCombination.get(i)));
-                southBank.set(validCombination.get(i), null);
-                boatLocation = Location.SOUTH;
+                boatCopy.peopleOnBoat.add(southBankCopy.get(validCombination.get(i)));
+                southBankCopy.set(validCombination.get(i), null);
+                boatLocationCopy = Location.SOUTH;
             }
         }
-        northBank.removeAll(Collections.singleton(null));
-        southBank.removeAll(Collections.singleton(null));
+        northBankCopy.removeAll(Collections.singleton(null));
+        southBankCopy.removeAll(Collections.singleton(null));
         
         // Boat location changes when the people are transported.
         // Depending on which bank it is, that is where the people get unloaded and added.
-        boatLocation = boatLocation == Location.NORTH ? Location.SOUTH : Location.NORTH;
-        while (boat.peopleOnBoat.size() > 0) {
-            if (boatLocation == Location.NORTH) {
-                northBank.add(boat.peopleOnBoat.remove(0));
-            } else if (boatLocation == Location.SOUTH) {
-                southBank.add(boat.peopleOnBoat.remove(0));
+        boatLocationCopy = boatLocationCopy == Location.NORTH ? Location.SOUTH : Location.NORTH;
+        while (!boatCopy.peopleOnBoat.isEmpty()) {
+            if (boatLocationCopy == Location.NORTH) {
+                northBankCopy.add(boatCopy.peopleOnBoat.remove(0));
+            } else if (boatLocationCopy == Location.SOUTH) {
+                southBankCopy.add(boatCopy.peopleOnBoat.remove(0));
             }
         }
-        Collections.sort(northBank);
-        Collections.sort(southBank);
-        RiverWorldState result = new RiverWorldState(riverWorld, boat, boatLocation, northBank, southBank);
+        Collections.sort(northBankCopy);
+        Collections.sort(southBankCopy);
+        RiverWorldState result = new RiverWorldState(riverWorld, boatCopy, boatLocationCopy, northBankCopy, southBankCopy);
         return result;
     }
     
@@ -287,12 +292,12 @@ public class RiverWorldState extends RiverWorld implements State {
     public String toString() {
         String peopleOnNorthBank = "";
         String peopleOnSouthBank = "";
-        if (northBank.size() == 0) {
+        if (northBank.isEmpty()) {
             peopleOnNorthBank += "empty\n";
         } else {
             peopleOnNorthBank += northBank.toString() + "\n";
         }
-        if (southBank.size() == 0) {
+        if (southBank.isEmpty()) {
             peopleOnSouthBank += "empty\n";
         } else {
             peopleOnSouthBank += southBank.toString() + "\n";

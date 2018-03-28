@@ -23,12 +23,11 @@ public class RiverWorldAction extends Action {
      *
      * @param riverWorldState The state to read from.
      * @param validCombination The people to transport. Can be one of many
-     * combinations. It is a list which integers which are
-     * used as indexes. A valid combination is one that can actually get on a boat.
-     * The indexes are used to pick out the right
-     * people from a bank (depending on where boat is), load them on a boat and
-     * move them across.
-     * i.e. Combination = [0th guy] OR [0th guy, 1st guy] OR [1st guy, 3rd guy, 4th guy] etc..
+     * combinations. It is a list which integers which are used as indexes. A
+     * valid combination is one that can actually get on a boat. The indexes are
+     * used to pick out the right people from a bank (depending on where boat
+     * is), load them on a boat and move them across. i.e. Combination = [0th
+     * guy] OR [0th guy, 1st guy] OR [1st guy, 3rd guy, 4th guy] etc..
      */
     public RiverWorldAction(RiverWorldState riverWorldState, ArrayList<Integer> validCombination) {
 
@@ -61,7 +60,7 @@ public class RiverWorldAction extends Action {
         for (int i = 0; i < this.validCombination.size(); i++) {
             if (this.boatLocation == Location.NORTH) {
                 loadOnBoat += this.northBank.get(this.validCombination.get(i)).weight;
-            } else if (this.boatLocation == Location.SOUTH) {
+            } else {
                 loadOnBoat += this.southBank.get(this.validCombination.get(i)).weight;
             }
         }
@@ -77,59 +76,59 @@ public class RiverWorldAction extends Action {
     public String toString() {
 
         // Local variables are created exclusively for the toString method.
-        ArrayList<Integer> validCombination = new ArrayList<>();
-        ArrayList<Person> northBank = new ArrayList<>();
-        ArrayList<Person> southBank = new ArrayList<>();
+        ArrayList<Integer> validCombinationCopy = new ArrayList<>();
+        ArrayList<Person> northBankCopy = new ArrayList<>();
+        ArrayList<Person> southBankCopy = new ArrayList<>();
         for (int i = 0; i < this.validCombination.size(); i++) {
-            validCombination.add(this.validCombination.get(i));
+            validCombinationCopy.add(this.validCombination.get(i));
         }
         for (int i = 0; i < this.northBank.size(); i++) {
-            northBank.add(this.northBank.get(i));
+            northBankCopy.add(this.northBank.get(i));
         }
         for (int i = 0; i < this.southBank.size(); i++) {
-            southBank.add(this.southBank.get(i));
+            southBankCopy.add(this.southBank.get(i));
         }
-        Boat boat = new Boat(this.boat.seats, this.boat.maxLoad);
-        Location boatLocation = this.boatLocation;
+        Boat boatCopy = new Boat(this.boat.seats, this.boat.maxLoad);
+        Location boatLocationCopy = this.boatLocation;
 
         // Here is where the people are picked, boat is loaded, transported 
         // and unloaded.
-        Collections.sort(northBank);
-        Collections.sort(southBank);
-        String result = "North is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation + "\n";
-        for (int i = 0; i < validCombination.size(); i++) {
-            if (boatLocation == Location.NORTH) {
-                boat.peopleOnBoat.add(northBank.get(validCombination.get(i)));
+        Collections.sort(northBankCopy);
+        Collections.sort(southBankCopy);
+        String result = "North is: " + northBankCopy.toString() + ".\nSouth is: " + southBankCopy.toString() + ".\nBoat is at: " + boatLocationCopy + "\n";
+        for (int i = 0; i < validCombinationCopy.size(); i++) {
+            if (boatLocationCopy == Location.NORTH) {
+                boatCopy.peopleOnBoat.add(northBankCopy.get(validCombinationCopy.get(i)));
                 // As a valid combination contains indexes which originate from
                 // the given bank, we do not want the size of the bank to change
                 // until all people are picked. Instead, the picked "positions"
                 // are replaced with nulls which, when done, get removed.
-                northBank.set(validCombination.get(i), null);
-            } else if (boatLocation == Location.SOUTH) {
-                boat.peopleOnBoat.add(southBank.get(validCombination.get(i)));
-                southBank.set(validCombination.get(i), null);
+                northBankCopy.set(validCombinationCopy.get(i), null);
+            } else if (boatLocationCopy == Location.SOUTH) {
+                boatCopy.peopleOnBoat.add(southBankCopy.get(validCombinationCopy.get(i)));
+                southBankCopy.set(validCombinationCopy.get(i), null);
             }
         }
 
         // Removing the nulls.
-        northBank.removeAll(Collections.singleton(null));
-        southBank.removeAll(Collections.singleton(null));
-        result += "Boat has transported: " + boat.peopleOnBoat.toString() + " from " + (boatLocation == Location.NORTH ? "NORTH" : "SOUTH")
-                + " to " + (boatLocation == Location.NORTH ? "SOUTH" : "NORTH") + "\n";
-        
+        northBankCopy.removeAll(Collections.singleton(null));
+        southBankCopy.removeAll(Collections.singleton(null));
+        result += "Boat has transported: " + boatCopy.peopleOnBoat.toString() + " from " + (boatLocationCopy == Location.NORTH ? "NORTH" : "SOUTH")
+                + " to " + (boatLocationCopy == Location.NORTH ? "SOUTH" : "NORTH") + "\n";
+
         // Boat location changes when the people are transported.
         // Depending on which bank it is, that is where the people get unloaded and added.
-        boatLocation = boatLocation == Location.NORTH ? Location.SOUTH : Location.NORTH;
-        while (boat.peopleOnBoat.size() > 0) {
-            if (boatLocation == Location.NORTH) {
-                northBank.add(boat.peopleOnBoat.remove(0));
-            } else if (boatLocation == Location.SOUTH) {
-                southBank.add(boat.peopleOnBoat.remove(0));
+        boatLocationCopy = boatLocationCopy == Location.NORTH ? Location.SOUTH : Location.NORTH;
+        while (!boatCopy.peopleOnBoat.isEmpty()) {
+            if (boatLocationCopy == Location.NORTH) {
+                northBankCopy.add(boatCopy.peopleOnBoat.remove(0));
+            } else if (boatLocationCopy == Location.SOUTH) {
+                southBankCopy.add(boatCopy.peopleOnBoat.remove(0));
             }
         }
-        Collections.sort(northBank);
-        Collections.sort(southBank);
-        result += "North is: " + northBank.toString() + ".\nSouth is: " + southBank.toString() + ".\nBoat is at: " + boatLocation + "\n";
+        Collections.sort(northBankCopy);
+        Collections.sort(southBankCopy);
+        result += "North is: " + northBankCopy.toString() + ".\nSouth is: " + southBankCopy.toString() + ".\nBoat is at: " + boatLocationCopy + "\n";
         result += "------------------------------------------------------------------------";
         return result;
     }

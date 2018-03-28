@@ -1,9 +1,8 @@
 package rivercrossingpuzzle;
 
-import cm3038.search.*;
-
 /**
  * Models a Person object.
+ *
  * @author Simeon Dobrudzhanski 1406444
  */
 public class Person implements Comparable<Person> {
@@ -25,6 +24,7 @@ public class Person implements Comparable<Person> {
 
     /**
      * Creates the Person object.
+     *
      * @param name Person name.
      * @param weight Person weight.
      * @param canSail Person's ability to sail a boat.
@@ -39,14 +39,15 @@ public class Person implements Comparable<Person> {
     public String toString() {
         return name + "(" + weight + ")" + (canSail ? "[S]" : "");
     }
-    
+
     /**
-     * The north/south banks and boat location between the current and goal state
-     * must match for the states to match. The banks are represented as array lists
-     * of Person objects. Comparing them is safer and easier when they are sorted, thus
-     * a sorting method has been added for People objects. Sorting first 
-     * sorts alphabetically, then weight wise, then sailing ability wise, otherwise
-     * defaults.
+     * The north/south banks and boat location between the current and goal
+     * state must match for the states to match. The banks are represented as
+     * array lists of Person objects. Comparing them is safer and easier when
+     * they are sorted, thus a sorting method has been added for People objects.
+     * Sorting first sorts alphabetically, then weight wise, then sailing
+     * ability wise, otherwise defaults.
+     *
      * @param o Other person.
      * @return Result of comparison.
      */
@@ -63,15 +64,18 @@ public class Person implements Comparable<Person> {
         }
         return name.compareTo(o.name);
     }
-    
+
     /**
      * If all data matches between two Person objects, they are the same person.
+     *
      * @param o Person to compare to.
      * @return Result of comparison.
      */
     @Override
-    public boolean equals (Object o) {
-        if (o == this) return true;
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
         if (!(o instanceof Person)) {
             return false;
         }
@@ -79,10 +83,12 @@ public class Person implements Comparable<Person> {
         return this.name.equals(other.name) && this.weight == other.weight
                 && this.canSail == other.canSail;
     }
-    
+
     /**
-     * The effective java method has been used to create a unique hashCode for a Person object.
+     * The effective java method has been used to create a unique hashCode for a
+     * Person object.
      * https://medium.com/codelog/overriding-hashcode-method-effective-java-notes-723c1fedf51c
+     *
      * @return HashCode of Person object.
      */
     @Override

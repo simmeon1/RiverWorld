@@ -30,11 +30,10 @@ public class Boat {
      *
      * @param seats The number of seats that the boat has.
      * @param maxLoad The maximum weight a boat can handle.
-     * @param world The initial river world.
      */
     public Boat(int seats, double maxLoad) {
         this.seats = seats;
         this.maxLoad = maxLoad;
-        this.peopleOnBoat = new ArrayList<Person>();
+        this.peopleOnBoat = new ArrayList<>();
     }
 }
